@@ -30,28 +30,13 @@ class ListMoviesResearchActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_list_movies_research)
 
-        recyclerView = findViewById(R.id.popular_movies)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        movieAdapter = MovieAdapter(listOf())
-        recyclerView.adapter = movieAdapter
-
-        MoviesRepository.getPopularMovies( onSuccess = ::onPopularMoviesFetched,
-            onError = ::onError)
 
 
 
 
 
     }
-    private fun onPopularMoviesFetched(movies: List<Movie>) {
-        Log.d("onFetchedPopularMovies", "Works")
-        movieAdapter.updateMovies(movies)
-    }
 
-    private fun onError() {
-        Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)

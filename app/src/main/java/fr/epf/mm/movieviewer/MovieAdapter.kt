@@ -1,6 +1,5 @@
 package fr.epf.mm.movieviewer;
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +12,14 @@ import fr.epf.mm.movieviewer.model.Movie
 
 
 class MovieAdapter(
-    private var movies: List<Movie>
+    private var movies: MutableList<Movie>,
+    private val onMovieClick: (movie: Movie) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.view_movie_research, parent, false)
+            .inflate(R.layout.view_movie_horizontal_list, parent, false)
         return MovieViewHolder(view)
     }
 
@@ -29,9 +29,12 @@ class MovieAdapter(
         holder.bind(movies[position])
     }
 
-    fun updateMovies(movies: List<Movie>) {
-        this.movies = movies
-        notifyDataSetChanged()
+    fun appendMovies(movies: List<Movie>) {
+        this.movies.addAll(movies)
+        notifyItemRangeInserted(
+            this.movies.size,
+            movies.size - 1
+        )
     }
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,6 +46,7 @@ class MovieAdapter(
                 .load("https://image.tmdb.org/t/p/w342${movie.posterPath}")
                 .transform(CenterCrop())
                 .into(poster)
+            itemView.setOnClickListener { onMovieClick.invoke(movie) }
         }
 
 
