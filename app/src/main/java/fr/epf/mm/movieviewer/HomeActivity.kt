@@ -47,6 +47,9 @@ class HomeActivity : AppCompatActivity() {
         popularMovies.adapter = movieAdapter
 
 
+
+
+
         topRatedMovies = findViewById(R.id.top_rated_movies)
         topRatedMoviesLayoutMgr = LinearLayoutManager(
             this,
@@ -56,6 +59,9 @@ class HomeActivity : AppCompatActivity() {
         topRatedMovies.layoutManager = topRatedMoviesLayoutMgr
         topRatedMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
         topRatedMovies.adapter = topRatedMoviesAdapter
+
+
+
 
 
         UpcomingMovies = findViewById(R.id.upcoming_movies)
@@ -83,6 +89,7 @@ class HomeActivity : AppCompatActivity() {
         intent.putExtra(MOVIE_RATING, movie.rating)
         intent.putExtra(MOVIE_RELEASE_DATE, movie.releaseDate)
         intent.putExtra(MOVIE_OVERVIEW, movie.overview)
+        intent.putExtra(MOVIE_ID,movie.id)
         startActivity(intent)
     }
 
@@ -104,7 +111,7 @@ class HomeActivity : AppCompatActivity() {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
                     UpcomingMovies.removeOnScrollListener(this)
                     UpcomingMoviesPage++
-                    getTopRatedMovies()
+                    getUpcomingMovies()
                 }
             }
         })
@@ -202,9 +209,6 @@ class HomeActivity : AppCompatActivity() {
 
 
 
-fun View.click(action : (View) -> Unit){
-    Log.d("CLICK", "click")
-    this.setOnClickListener(action)
-}
+
 
 

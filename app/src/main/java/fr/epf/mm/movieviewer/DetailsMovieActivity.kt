@@ -1,20 +1,24 @@
 package fr.epf.mm.movieviewer
 
 import android.content.Intent
-import android.graphics.Bitmap
+
 import android.os.Bundle
-import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
+import android.util.Log
+
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 
-private const val PICTURE_REQUEST_CODE = 100
+
+import fr.epf.mm.movieviewer.model.Movie
+
+
 
 const val MOVIE_BACKDROP = "extra_movie_backdrop"
 const val MOVIE_POSTER = "extra_movie_poster"
@@ -22,8 +26,15 @@ const val MOVIE_TITLE = "extra_movie_title"
 const val MOVIE_RATING = "extra_movie_rating"
 const val MOVIE_RELEASE_DATE = "extra_movie_release_date"
 const val MOVIE_OVERVIEW = "extra_movie_overview"
-
+const val MOVIE_ID = "extra_movie_id"
   class DetailsMovieActivity : AppCompatActivity() {
+
+    private lateinit var SimilarMovies: RecyclerView
+    private lateinit var SimilarMoviesAdapter: MovieAdapter
+    private lateinit var SimilarMoviesLayoutMgr: LinearLayoutManager
+private var id :Long =0
+    private var SimilarMoviesPage = 1
+
     private lateinit var backdrop: ImageView
     private lateinit var poster: ImageView
     private lateinit var title: TextView
@@ -31,9 +42,21 @@ const val MOVIE_OVERVIEW = "extra_movie_overview"
     private lateinit var releaseDate: TextView
     private lateinit var overview: TextView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_details_movie)
+      SimilarMovies = findViewById(R.id.similar_movies)
+
+      SimilarMoviesLayoutMgr = LinearLayoutManager(
+        this,
+        LinearLayoutManager.HORIZONTAL,
+        false
+      )
+      SimilarMovies.layoutManager = SimilarMoviesLayoutMgr
+      SimilarMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
+      SimilarMovies.adapter = SimilarMoviesAdapter
+
 
       backdrop = findViewById(R.id.movie_backdrop)
       poster = findViewById(R.id.movie_poster)
@@ -50,9 +73,46 @@ const val MOVIE_OVERVIEW = "extra_movie_overview"
       } else {
         finish()
       }
+
+      getSimilarMovies()
+
     }
 
 
+    private fun getSimilarMovies() {
+      MoviesRepository.getSimilarMovies(
+        SimilarMoviesPage,
+        ::SimilarMoviesFetched,
+        ::onError,
+        id
+      )
+      Log.d("getSimilarDetails", id.toString())
+    }
+
+    private fun onError() {
+      Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
+    }
+     private fun attachSimilarMoviesOnScrollListener() {
+      SimilarMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+          val totalItemCount = SimilarMoviesLayoutMgr.itemCount
+          val visibleItemCount = SimilarMoviesLayoutMgr.childCount
+          val firstVisibleItem = SimilarMoviesLayoutMgr.findFirstVisibleItemPosition()
+
+          if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
+            SimilarMovies.removeOnScrollListener(this)
+            SimilarMoviesPage++
+
+            getSimilarMovies()}
+
+        }
+      })
+    }
+
+    private fun SimilarMoviesFetched(movies: List<Movie>) {
+      SimilarMoviesAdapter.appendMovies(movies)
+      attachSimilarMoviesOnScrollListener()
+    }
 
     private fun populateDetails(extras: Bundle) {
       extras.getString(MOVIE_BACKDROP)?.let { backdropPath ->
@@ -73,9 +133,23 @@ const val MOVIE_OVERVIEW = "extra_movie_overview"
       rating.rating = extras.getFloat(MOVIE_RATING, 0f) / 2
       releaseDate.text = extras.getString(MOVIE_RELEASE_DATE, "")
       overview.text = extras.getString(MOVIE_OVERVIEW, "")
+      id= extras.getLong(MOVIE_ID, 0)
+      Log.d("populateDetails", id.toString())
     }
 
 
+
+    private fun showMovieDetails(movie: Movie) {
+      val intent = Intent(this, DetailsMovieActivity::class.java)
+      intent.putExtra(MOVIE_BACKDROP, movie.backdropPath)
+      intent.putExtra(MOVIE_POSTER, movie.posterPath)
+      intent.putExtra(MOVIE_TITLE, movie.title)
+      intent.putExtra(MOVIE_RATING, movie.rating)
+      intent.putExtra(MOVIE_RELEASE_DATE, movie.releaseDate)
+      intent.putExtra(MOVIE_OVERVIEW, movie.overview)
+      intent.putExtra(MOVIE_ID,movie.id)
+      startActivity(intent)
+    }
 
 
 }

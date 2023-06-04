@@ -8,12 +8,20 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TMDBRequests {
 
+    @GET("movie/{id}/similar")
+   fun getSimilarMovies(
+        @Path("id") id: Long,
+        @Query("api_key") apiKey: String = "82cbf553f26b33078cc5280ca6659e6d",
+        @Query("page") page: Int
+    ): Call<GetMoviesResponse>
 
-     @GET("movie/popular")
+    @GET("movie/popular")
      fun getPopularMovies(
          @Query("api_key") apiKey: String = "82cbf553f26b33078cc5280ca6659e6d",
          @Query("page") page: Int
@@ -45,6 +53,37 @@ object MoviesRepository {
         api = retrofit.create(TMDBRequests::class.java)
     }
 
+
+ fun getSimilarMovies(
+        page: Int = 1,
+        onSuccess: (movies: List<Movie>) -> Unit,
+        onError: () -> Unit,
+        id: Long
+    )  {
+        api.getSimilarMovies(page = page,id = id)
+            .enqueue(object : Callback<GetMoviesResponse> {
+                override fun onResponse(
+                    call: Call<GetMoviesResponse>,
+                    response: Response<GetMoviesResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+
+                        if (responseBody != null) {
+                            onSuccess.invoke(responseBody.movies)
+                        } else {
+                            onError.invoke()
+                        }
+                    } else {
+                        onError.invoke()
+                    }
+                }
+
+                override fun onFailure(call: Call<GetMoviesResponse>, t: Throwable) {
+                    onError.invoke()
+                }
+            })
+    }
     fun getPopularMovies(
         page: Int = 1,
         onSuccess: (movies: List<Movie>) -> Unit,

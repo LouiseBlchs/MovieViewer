@@ -94,16 +94,33 @@
             app:layout_constraintStart_toStartOf="@+id/movie_poster_card"
             app:layout_constraintTop_toBottomOf="@+id/movie_poster_card" />
 
-        <TextView
-            android:id="@+id/similar_contents"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/similar_content_linear_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Similar contents"
-            tools:layout_editor_absoluteX="24dp"
-            tools:layout_editor_absoluteY="529dp" />
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="@+id/movie_overview"
+            app:layout_constraintTop_toBottomOf="@+id/movie_overview">
+
+        <TextView
+            android:id="@+id/similar_movies_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Similar content"
+           />
 
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/similar_movies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintStart_toStartOf="@+id/similar_movies_textview"
+            app:layout_constraintTop_toBottomOf="@+id/similar_movies_textview" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
