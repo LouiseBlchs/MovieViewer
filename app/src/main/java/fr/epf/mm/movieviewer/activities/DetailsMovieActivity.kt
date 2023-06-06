@@ -1,4 +1,4 @@
-package fr.epf.mm.movieviewer
+package fr.epf.mm.movieviewer.activities
 
 import android.content.Intent
 
@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import fr.epf.mm.movieviewer.MovieAdapter
+import fr.epf.mm.movieviewer.MoviesRepository
+import fr.epf.mm.movieviewer.R
 
 
 import fr.epf.mm.movieviewer.model.Movie
@@ -32,7 +35,8 @@ const val MOVIE_ID = "extra_movie_id"
     private lateinit var SimilarMovies: RecyclerView
     private lateinit var SimilarMoviesAdapter: MovieAdapter
     private lateinit var SimilarMoviesLayoutMgr: LinearLayoutManager
-private var id :Long =0
+
+    private var id :Long =0
     private var SimilarMoviesPage = 1
 
     private lateinit var backdrop: ImageView

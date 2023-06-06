@@ -1,10 +1,12 @@
-package fr.epf.mm.movieviewer
+package fr.epf.mm.movieviewer.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
+import fr.epf.mm.movieviewer.R
+
 @Suppress("DEPRECATION")
 class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

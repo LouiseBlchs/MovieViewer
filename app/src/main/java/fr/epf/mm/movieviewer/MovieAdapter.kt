@@ -12,6 +12,8 @@ import fr.epf.mm.movieviewer.model.Movie
 
 
 class MovieAdapter(
+
+
     private var movies: MutableList<Movie>,
     private val onMovieClick: (movie: Movie) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
@@ -54,5 +56,14 @@ class MovieAdapter(
     }
 
 
+
+    fun filterList(filterlist: Unit) {
+        // below line is to add our filtered
+        // list in our course array list.
+
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged()
+    }
 }
 
