@@ -35,33 +35,34 @@ class ListMoviesResearchActivity : AppCompatActivity() {
         popularMoviesLayoutMgr = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         popularMovies.layoutManager=popularMoviesLayoutMgr
-        movieList = ArrayList()
+
         movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
         popularMovies.adapter = movieAdapter
 
+        movieList = ArrayList()
         // below line is to call set on query text listener method.
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener
         {
-            override fun onQueryTextSubmit(p0: String?) :Boolean {
+            override fun onQueryTextSubmit(msg: String) :Boolean {
+                Log.d("msg", msg)
+                getPopularMovies(msg)
+
+                movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
+                popularMovies.adapter = movieAdapter
 
                 return false
             }
 
             override fun onQueryTextChange(msg: String): Boolean {
                 Log.d("msg", msg)
-               filter(msg)
-                movieList = arrayListOf(getPopularMovies(msg))
+                getPopularMovies(msg)
+                movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
+                popularMovies.adapter = movieAdapter
+
                 return false
             }
         })
-
-movieAdapter.notifyDataSetChanged()
-
     }
-
-
-
-
 
 
     fun showMovieDetails(movie: Movie) {
@@ -117,29 +118,8 @@ movieAdapter.notifyDataSetChanged()
 
 
 
-    private fun filter(text: String) {
-        // creating a new array list to filter our data.
-        var filteredlist: Unit = Unit
 
-           filteredlist=getPopularMovies(text)
-        // running a for loop to compare elements.
-        /*for (item in movieList) {
-            // checking if the entered string matched with any item of our recycler view.
-            if (item.toLowerCase().contains(text.toLowerCase())) {
-                // if the item is matched we are
-                // adding it to our filtered list.
-                filteredlist.add(item)
-            }
-        }*/
-        if (filteredlist.equals(null)) {
-            // if no item is added in filtered list we are
-            // displaying a toast message as no data found.
-            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show()
-        } else {
-            // at last we are passing that filtered
-            // list to our adapter class.
-            movieAdapter.filterList(filteredlist)
-        }
+
     }
 
 
@@ -148,4 +128,3 @@ movieAdapter.notifyDataSetChanged()
 
 
 
-}
