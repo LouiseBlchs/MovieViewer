@@ -23,7 +23,7 @@ class SplashScreenActivity : AppCompatActivity() {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             finish()
-        }, 2500) //
+        }, 1500) //
 
     }
 }

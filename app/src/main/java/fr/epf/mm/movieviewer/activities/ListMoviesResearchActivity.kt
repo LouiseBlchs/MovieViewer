@@ -2,16 +2,14 @@ package fr.epf.mm.movieviewer.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import fr.epf.mm.movieviewer.MovieAdapter
+import fr.epf.mm.movieviewer.MovieAdapterVertical
 import fr.epf.mm.movieviewer.MoviesRepository
 import fr.epf.mm.movieviewer.R
 import fr.epf.mm.movieviewer.model.Movie
@@ -19,12 +17,12 @@ import fr.epf.mm.movieviewer.model.Movie
 
 class ListMoviesResearchActivity : AppCompatActivity() {
 
-    private lateinit var popularMoviesLayoutMgr: LinearLayoutManager
-    private lateinit var popularMovies: RecyclerView
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var searchedMoviesLayoutManager: LinearLayoutManager
+    private lateinit var searchedMovies: RecyclerView
+    private lateinit var searchedMoviesAdapter: MovieAdapterVertical
     private lateinit var searchView: SearchView
     private lateinit var movieList:ArrayList<Unit>
-    private var popularMoviesPage = 1
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,30 +31,30 @@ class ListMoviesResearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list_movies_research)
        searchView =findViewById(R.id.search_view)
 
-        popularMovies = findViewById(R.id.popular_movies)
-        popularMoviesLayoutMgr = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        searchedMovies = findViewById(R.id.searched_movies)
+        searchedMoviesLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        popularMovies.layoutManager=popularMoviesLayoutMgr
+        searchedMovies.layoutManager=searchedMoviesLayoutManager
 
-        movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-        popularMovies.adapter = movieAdapter
+        searchedMoviesAdapter = MovieAdapterVertical(mutableListOf()){ movie -> showMovieDetails(movie)}
+        searchedMovies.adapter = searchedMoviesAdapter
 
         movieList = ArrayList()
-        // below line is to call set on query text listener method.
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener
         {
             override fun onQueryTextSubmit(msg: String) :Boolean {
-                getPopularMovies(msg)
-                movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-                popularMovies.adapter = movieAdapter
+                getSearchedMovies(msg)
+                searchedMoviesAdapter = MovieAdapterVertical(mutableListOf()){ movie -> showMovieDetails(movie)}
+                searchedMovies.adapter = searchedMoviesAdapter
 
                 return false
             }
 
             override fun onQueryTextChange(msg: String): Boolean {
-                getPopularMovies(msg)
-                movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-                popularMovies.adapter = movieAdapter
+                getSearchedMovies(msg)
+                searchedMoviesAdapter = MovieAdapterVertical(mutableListOf()){ movie -> showMovieDetails(movie)}
+                searchedMovies.adapter = searchedMoviesAdapter
 
                 return false
             }
@@ -77,18 +75,18 @@ class ListMoviesResearchActivity : AppCompatActivity() {
     }
 
 
-    private fun getPopularMovies(query:String) {
+    private fun getSearchedMovies(query:String) {
         MoviesRepository.getSearchedMovies(
-            popularMoviesPage,
-            ::onPopularMoviesFetched,
+            1,
+            ::searchedMoviesData,
             ::onError,
                 query
         )
 
     }
 
-    private fun onPopularMoviesFetched(movies: List<Movie>) {
-        movieAdapter.appendMovies(movies)
+    private fun searchedMoviesData(movies: List<Movie>) {
+        searchedMoviesAdapter.appendMovies(movies)
 
     }
 

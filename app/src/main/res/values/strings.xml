@@ -1,13 +1,10 @@
 <resources>
     <string name="app_name">MovieViewer</string>
-
-    <string name="favorites_section">My favorites</string>
-    <string name="input_movie_field">Type a movie title </string>
+    <string name="input_movie_field">Search movie ... </string>
     <string name="popular">Popular</string>
-    <string name="most_popular_movies">Most popular movies</string>
-    <string name="error_fetch_movies">Data not found</string>
+    <string name="error_fetch_movies">No Data fetched</string>
     <string name="top_rated">Top Rated</string>
-    <string name="highest_rated_movies">Highest rated movies of all time</string>
     <string name="upcoming">Upcoming</string>
-    <string name="stay_updated">Stay updated with the latest movies</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="your_results">Search results</string>
 </resources>

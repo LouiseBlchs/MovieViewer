@@ -10,29 +10,23 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:iconifiedByDefault="false"
-        android:padding="4dp"
-        android:queryHint="Search ..."
-        />
+        android:padding="0dp"
+        android:queryHint="@string/input_movie_field" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/popular"
-        android:textColor="@android:color/white"
+        android:text="@string/your_results"
+        android:textColor="@color/deep_purple"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/most_popular_movies" />
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/popular_movies"
+        android:id="@+id/searched_movies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

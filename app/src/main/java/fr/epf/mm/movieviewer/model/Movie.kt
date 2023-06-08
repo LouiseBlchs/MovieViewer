@@ -1,15 +1,7 @@
 package fr.epf.mm.movieviewer.model
 
-import android.media.Image
-import android.os.Parcelable
-import android.widget.ImageView
-import androidx.versionedparcelable.VersionedParcelize
+
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-
-
-
-// https://developer.android.com/kotlin/parcelize?hl=fr#groovy
 
 
 data class Movie (

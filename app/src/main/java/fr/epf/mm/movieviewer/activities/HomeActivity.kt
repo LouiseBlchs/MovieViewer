@@ -18,29 +18,26 @@ import io.github.g00fy2.quickie.ScanQRCode
 
 class HomeActivity : AppCompatActivity() {
 
+    private lateinit var nowPlayingMoviesLayoutManager: LinearLayoutManager
+    private lateinit var nowPlayingMovies: RecyclerView
+    private lateinit var nowPlayingMovieAdapter: MovieAdapter
 
-    private lateinit var popularMoviesLayoutMgr: LinearLayoutManager
+    private lateinit var popularMoviesLayoutManager: LinearLayoutManager
     private lateinit var popularMovies: RecyclerView
-    private lateinit var popularmovieAdapter: MovieAdapter
+    private lateinit var popularMovieAdapter: MovieAdapter
 
     private lateinit var topRatedMovies: RecyclerView
     private lateinit var topRatedMoviesAdapter: MovieAdapter
-    private lateinit var topRatedMoviesLayoutMgr: LinearLayoutManager
+    private lateinit var topRatedMoviesLayoutManager: LinearLayoutManager
 
-    private lateinit var FavoriteMovies: RecyclerView
-    private lateinit var FavoriteMoviesAdapter: MovieAdapter
-    private lateinit var FavoriteMoviesLayoutMgr: LinearLayoutManager
 
-    private lateinit var UpcomingMovies: RecyclerView
-    private lateinit var UpcomingMoviesAdapter: MovieAdapter
-    private lateinit var UpcomingMoviesLayoutMgr: LinearLayoutManager
+    private lateinit var upcomingMovies: RecyclerView
+    private lateinit var upcomingMoviesAdapter: MovieAdapter
+    private lateinit var upcomingMoviesLayoutManager: LinearLayoutManager
 
-    private var popularMoviesPage = 1
-    private var topRatedMoviesPage = 1
-    private var UpcomingMoviesPage = 1
-    private var FavoriteMoviesPage = 1
 
-    val scanQrCodeLauncher = registerForActivityResult(ScanQRCode()) {result:QRResult -> openIDMovie(result.toString())
+
+    private val scanQrCodeLauncher = registerForActivityResult(ScanQRCode()) {result:QRResult -> openIDMovie(result.toString())
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,53 +45,52 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
 
+
+        nowPlayingMovies = findViewById(R.id.now_playing_movies)
+        nowPlayingMoviesLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        nowPlayingMovies.layoutManager=nowPlayingMoviesLayoutManager
+
+        nowPlayingMovieAdapter = MovieAdapter(mutableListOf()){ movie -> details(movie)}
+        nowPlayingMovies.adapter = nowPlayingMovieAdapter
+
         popularMovies = findViewById(R.id.popular_movies)
-        popularMoviesLayoutMgr = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        popularMoviesLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        popularMovies.layoutManager=popularMoviesLayoutMgr
+        popularMovies.layoutManager=popularMoviesLayoutManager
 
-        popularmovieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-        popularMovies.adapter = popularmovieAdapter
+        popularMovieAdapter = MovieAdapter(mutableListOf()){ movie -> details(movie)}
+        popularMovies.adapter = popularMovieAdapter
 
 
         topRatedMovies = findViewById(R.id.top_rated_movies)
-        topRatedMoviesLayoutMgr = LinearLayoutManager(
+        topRatedMoviesLayoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        topRatedMovies.layoutManager = topRatedMoviesLayoutMgr
-        topRatedMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
+        topRatedMovies.layoutManager = topRatedMoviesLayoutManager
+        topRatedMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> details(movie)}
         topRatedMovies.adapter = topRatedMoviesAdapter
 
 
-        FavoriteMovies = findViewById(R.id.favorite_movies)
-        FavoriteMoviesLayoutMgr = LinearLayoutManager(
+
+
+        upcomingMovies = findViewById(R.id.upcoming_movies)
+        upcomingMoviesLayoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.HORIZONTAL,
             false
         )
-        FavoriteMovies.layoutManager = FavoriteMoviesLayoutMgr
-        FavoriteMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-        FavoriteMovies.adapter = FavoriteMoviesAdapter
-
-
-
-        UpcomingMovies = findViewById(R.id.upcoming_movies)
-        UpcomingMoviesLayoutMgr = LinearLayoutManager(
-            this,
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        UpcomingMovies.layoutManager = UpcomingMoviesLayoutMgr
-        UpcomingMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-        UpcomingMovies.adapter = UpcomingMoviesAdapter
+        upcomingMovies.layoutManager = upcomingMoviesLayoutManager
+        upcomingMoviesAdapter = MovieAdapter(mutableListOf()){ movie -> details(movie)}
+        upcomingMovies.adapter = upcomingMoviesAdapter
 
 
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()
-      //  getFavoriteMovies()
+        getNowPlayingMovies()
 
     }
 
@@ -133,7 +129,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    fun showMovieDetails(movie: Movie) {
+   private fun details(movie: Movie) {
         val intent = Intent(this, DetailsMovieActivity::class.java)
         intent.putExtra(MOVIE_BACKDROP, movie.backdropPath)
         intent.putExtra(MOVIE_POSTER, movie.posterPath)
@@ -145,62 +141,55 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getFavoriteMovies() {
-        MoviesRepository.getFavoriteMovies(
-            FavoriteMoviesPage,
-            ::FavoriteMoviesFetched,
-            ::onError
-        )
-    }
-
-
-    private fun FavoriteMoviesFetched(movies: List<Movie>) {
-        FavoriteMoviesAdapter.appendMovies(movies)
-
-    }
-
-
 
 
     private fun getUpcomingMovies() {
         MoviesRepository.getUpcomingMovies(
-            UpcomingMoviesPage,
-            ::UpcomingMoviesFetched,
+            1,
+            ::upcomingMoviesData,
             ::onError
         )
     }
 
 
-    private fun UpcomingMoviesFetched(movies: List<Movie>) {
-        UpcomingMoviesAdapter.appendMovies(movies)
+    private fun upcomingMoviesData(movies: List<Movie>) {
+        upcomingMoviesAdapter.appendMovies(movies)
 
     }
+    private fun getNowPlayingMovies() {
+        MoviesRepository.getNowPlayingMovies(
+            1,
+            ::nowPlayingMoviesData,
+            ::onError
+        )
+    }
 
+    private fun nowPlayingMoviesData(movies: List<Movie>) {
+        nowPlayingMovieAdapter.appendMovies(movies)
 
+    }
     private fun getPopularMovies() {
       getPopularMovies(
-            popularMoviesPage,
-            ::onPopularMoviesFetched,
+            1,
+            ::popularMoviesData,
             ::onError
         )
     }
 
-    private fun onPopularMoviesFetched(movies: List<Movie>) {
-        popularmovieAdapter.appendMovies(movies)
+    private fun popularMoviesData(movies: List<Movie>) {
+        popularMovieAdapter.appendMovies(movies)
 
     }
-
 
     private fun getTopRatedMovies() {
        getTopRatedMovies(
-            topRatedMoviesPage,
-            ::onTopRatedMoviesFetched,
+            1,
+            ::topRatedMoviesData,
             ::onError
         )
     }
 
-
-    private fun onTopRatedMoviesFetched(movies: List<Movie>) {
+    private fun topRatedMoviesData(movies: List<Movie>) {
         topRatedMoviesAdapter.appendMovies(movies)
 
     }

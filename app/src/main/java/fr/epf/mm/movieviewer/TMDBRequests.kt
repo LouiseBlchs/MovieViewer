@@ -17,11 +17,7 @@ interface TMDBRequests {
         @Query("page") page: Int
     ): Call<GetMoviesResponse>
 
-    @GET("account/19813966/favorite/movies")
-    fun getFavoriteMovies(
-        @Query("api_key") apiKey: String = "82cbf553f26b33078cc5280ca6659e6d",
-        @Query("page") page: Int
-    ): Call<GetMoviesResponse>
+
     @GET("movie/{id}/similar")
    fun getSimilarMovies(
         @Path("id") id: Long,
@@ -29,6 +25,12 @@ interface TMDBRequests {
         @Query("page") page: Int
     ): Call<GetMoviesResponse>
 
+
+    @GET("movie/now_playing")
+    fun getNowPlayingMovies(
+        @Query("api_key") apiKey: String = "82cbf553f26b33078cc5280ca6659e6d",
+        @Query("page") page: Int
+    ): Call<GetMoviesResponse>
     @GET("movie/popular")
      fun getPopularMovies(
          @Query("api_key") apiKey: String = "82cbf553f26b33078cc5280ca6659e6d",
@@ -122,35 +124,7 @@ object MoviesRepository {
             })
     }
 
-    fun getFavoriteMovies(
-        page: Int = 1,
-        onSuccess: (movies: List<Movie>) -> Unit,
-        onError: () -> Unit
-    )  {
-        api.getFavoriteMovies(page = page)
-            .enqueue(object : Callback<GetMoviesResponse> {
-                override fun onResponse(
-                    call: Call<GetMoviesResponse>,
-                    response: Response<GetMoviesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val responseBody = response.body()
 
-                        if (responseBody != null) {
-                            onSuccess.invoke(responseBody.movies)
-                        } else {
-                            onError.invoke()
-                        }
-                    } else {
-                        onError.invoke()
-                    }
-                }
-
-                override fun onFailure(call: Call<GetMoviesResponse>, t: Throwable) {
-                    onError.invoke()
-                }
-            })
-    }
     fun getPopularMovies(
         page: Int = 1,
         onSuccess: (movies: List<Movie>) -> Unit,
@@ -241,5 +215,35 @@ object MoviesRepository {
             })
     }
 
+
+    fun getNowPlayingMovies(
+        page: Int = 1,
+        onSuccess: (movies: List<Movie>) -> Unit,
+        onError: () -> Unit
+    ) {
+        api.getNowPlayingMovies(page = page)
+            .enqueue(object : Callback<GetMoviesResponse> {
+                override fun onResponse(
+                    call: Call<GetMoviesResponse>,
+                    response: Response<GetMoviesResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+
+                        if (responseBody != null) {
+                            onSuccess.invoke(responseBody.movies)
+                        } else {
+                            onError.invoke()
+                        }
+                    } else {
+                        onError.invoke()
+                    }
+                }
+
+                override fun onFailure(call: Call<GetMoviesResponse>, t: Throwable) {
+                    onError.invoke()
+                }
+            })
+    }
 
 }

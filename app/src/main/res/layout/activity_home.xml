@@ -19,14 +19,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/favorites_section"
+        android:text="@string/now_playing"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
 
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favorite_movies"
+        android:id="@+id/now_playing_movies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -98,6 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
+        android:paddingBottom="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp" />
 

@@ -19,20 +19,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/backdrop_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.4" />
+            app:layout_constraintGuide_percent="0.35" />
 
         <TextView
             android:id="@+id/movie_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="28dp"
+
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="28dp"
+            android:gravity="right"
             android:textColor="@color/deep_purple"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -48,36 +49,10 @@
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/movie_overview"
-            app:layout_constraintTop_toBottomOf="@id/movie_author"
+            app:layout_constraintTop_toBottomOf="@id/movie_rating"
             app:layout_constraintVertical_bias="0.482"
             tools:layout_editor_absoluteX="16dp" />
 
-        <TextView
-            android:id="@+id/movie_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#757575"
-            android:textSize="12sp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/movie_author"
-            app:layout_constraintTop_toBottomOf="@id/movie_rating"
-            app:layout_constraintVertical_bias="0.482"
-            android:text="dummy 1"
-            tools:layout_editor_absoluteX="16dp" />
-        <TextView
-            android:id="@+id/movie_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#757575"
-            android:textSize="12sp"
-            android:layout_marginStart="16dp"
-            android:text="dummy 2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/movie_release_date"
-            app:layout_constraintTop_toBottomOf="@id/movie_duration"
-            app:layout_constraintVertical_bias="0.482"
-            tools:layout_editor_absoluteX="16dp" />
 
         <TextView
             android:id="@+id/movie_overview"
@@ -86,7 +61,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_release_date" />
 
@@ -97,7 +72,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/movie_title"
-
             app:layout_constraintTop_toBottomOf="@+id/movie_title" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -115,6 +89,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Similar content"
+                android:paddingStart="16dp"
                 android:textColor="@color/deep_purple"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -128,6 +103,8 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:paddingBottom="16dp"
                  />
         </LinearLayout>
 
