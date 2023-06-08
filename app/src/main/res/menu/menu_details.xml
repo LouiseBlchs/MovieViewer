@@ -9,8 +9,8 @@
         android:title="Research by title"
         app:showAsAction="ifRoom" />
     <item
-android:id="@+id/action_qrscanner"
-android:icon="@drawable/baseline_qr_code_scanner_24"
-android:title="QR scanner"
-app:showAsAction="ifRoom" />
-    </menu>
+        android:id="@+id/action_home"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home"
+        app:showAsAction="ifRoom" />
+</menu>

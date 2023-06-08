@@ -1,5 +1,6 @@
 package fr.epf.mm.movieviewer.activities
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,16 +13,15 @@ import fr.epf.mm.movieviewer.*
 import fr.epf.mm.movieviewer.MoviesRepository.getPopularMovies
 import fr.epf.mm.movieviewer.MoviesRepository.getTopRatedMovies
 import fr.epf.mm.movieviewer.model.Movie
+import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanQRCode
 
 class HomeActivity : AppCompatActivity() {
 
-    val scanQrCodeLauncher = registerForActivityResult(ScanQRCode()) { result ->
-        // handle QRResult
-    }
+
     private lateinit var popularMoviesLayoutMgr: LinearLayoutManager
     private lateinit var popularMovies: RecyclerView
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var popularmovieAdapter: MovieAdapter
 
     private lateinit var topRatedMovies: RecyclerView
     private lateinit var topRatedMoviesAdapter: MovieAdapter
@@ -40,6 +40,9 @@ class HomeActivity : AppCompatActivity() {
     private var UpcomingMoviesPage = 1
     private var FavoriteMoviesPage = 1
 
+    val scanQrCodeLauncher = registerForActivityResult(ScanQRCode()) {result:QRResult -> openIDMovie(result.toString())
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -50,9 +53,8 @@ class HomeActivity : AppCompatActivity() {
 
         popularMovies.layoutManager=popularMoviesLayoutMgr
 
-        movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
-        popularMovies.adapter = movieAdapter
-
+        popularmovieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
+        popularMovies.adapter = popularmovieAdapter
 
 
         topRatedMovies = findViewById(R.id.top_rated_movies)
@@ -78,7 +80,6 @@ class HomeActivity : AppCompatActivity() {
 
 
 
-
         UpcomingMovies = findViewById(R.id.upcoming_movies)
         UpcomingMoviesLayoutMgr = LinearLayoutManager(
             this,
@@ -93,11 +94,46 @@ class HomeActivity : AppCompatActivity() {
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()
-        getFavoriteMovies()
+      //  getFavoriteMovies()
 
     }
 
-     fun showMovieDetails(movie: Movie) {
+
+    private fun openIDMovie(id:String){
+        try{
+            val intent = Intent(this, DetailsMovieActivity::class.java)
+            intent.putExtra(MOVIE_ID,id)
+            startActivity(intent)
+        }catch (ignored: ActivityNotFoundException) {
+            // no Activity found to run the given Intent
+        }
+
+    }
+    private fun onError() {
+        Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_research -> {
+                val intent = Intent(this, ListMoviesResearchActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.action_qrscanner ->{
+                scanQrCodeLauncher.launch(null)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    fun showMovieDetails(movie: Movie) {
         val intent = Intent(this, DetailsMovieActivity::class.java)
         intent.putExtra(MOVIE_BACKDROP, movie.backdropPath)
         intent.putExtra(MOVIE_POSTER, movie.posterPath)
@@ -117,25 +153,10 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-    private fun attachFavoriteMoviesOnScrollListener() {
-        FavoriteMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val totalItemCount = FavoriteMoviesLayoutMgr.itemCount
-                val visibleItemCount = FavoriteMoviesLayoutMgr.childCount
-                val firstVisibleItem = FavoriteMoviesLayoutMgr.findFirstVisibleItemPosition()
-
-                if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                    FavoriteMovies.removeOnScrollListener(this)
-                    FavoriteMoviesPage++
-                    getUpcomingMovies()
-                }
-            }
-        })
-    }
 
     private fun FavoriteMoviesFetched(movies: List<Movie>) {
         FavoriteMoviesAdapter.appendMovies(movies)
-        attachFavoriteMoviesOnScrollListener()
+
     }
 
 
@@ -149,25 +170,10 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-    private fun attachUpcomingMoviesOnScrollListener() {
-        UpcomingMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val totalItemCount = UpcomingMoviesLayoutMgr.itemCount
-                val visibleItemCount = UpcomingMoviesLayoutMgr.childCount
-                val firstVisibleItem = UpcomingMoviesLayoutMgr.findFirstVisibleItemPosition()
-
-                if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                    UpcomingMovies.removeOnScrollListener(this)
-                    UpcomingMoviesPage++
-                    getUpcomingMovies()
-                }
-            }
-        })
-    }
 
     private fun UpcomingMoviesFetched(movies: List<Movie>) {
         UpcomingMoviesAdapter.appendMovies(movies)
-        attachUpcomingMoviesOnScrollListener()
+
     }
 
 
@@ -180,46 +186,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onPopularMoviesFetched(movies: List<Movie>) {
-        movieAdapter.appendMovies(movies)
-        attachPopularMoviesOnScrollListener()
-    }
+        popularmovieAdapter.appendMovies(movies)
 
-    private fun attachPopularMoviesOnScrollListener() {
-        popularMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val totalItemCount = popularMoviesLayoutMgr.itemCount
-                val visibleItemCount = popularMoviesLayoutMgr.childCount
-                val firstVisibleItem = popularMoviesLayoutMgr.findFirstVisibleItemPosition()
-
-                if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                    popularMovies.removeOnScrollListener(this)
-                    popularMoviesPage++
-                    getPopularMovies()
-                }
-            }
-        })
-    }
-    private fun onError() {
-        Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_home, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_research -> {
-                val intent = Intent(this, ListMoviesResearchActivity::class.java)
-                startActivity(intent)
-            }
-           R.id.action_qrscanner ->{
-               scanQrCodeLauncher.launch(null)
-           }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
 
@@ -231,25 +199,10 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-    private fun attachTopRatedMoviesOnScrollListener() {
-        topRatedMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val totalItemCount = topRatedMoviesLayoutMgr.itemCount
-                val visibleItemCount = topRatedMoviesLayoutMgr.childCount
-                val firstVisibleItem = topRatedMoviesLayoutMgr.findFirstVisibleItemPosition()
-
-                if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                    topRatedMovies.removeOnScrollListener(this)
-                    topRatedMoviesPage++
-                    getTopRatedMovies()
-                }
-            }
-        })
-    }
 
     private fun onTopRatedMoviesFetched(movies: List<Movie>) {
         topRatedMoviesAdapter.appendMovies(movies)
-        attachTopRatedMoviesOnScrollListener()
+
     }
 
     }

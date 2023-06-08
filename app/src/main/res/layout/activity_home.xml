@@ -2,7 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#25184f"
+    android:background="@color/deep_purple"
     >
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,12 +24,6 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="My favs" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorite_movies"
@@ -51,12 +45,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/most_popular_movies" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/popular_movies"
@@ -78,12 +67,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/highest_rated_movies" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/top_rated_movies"
@@ -106,12 +90,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/upcoming" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/upcoming_movies"

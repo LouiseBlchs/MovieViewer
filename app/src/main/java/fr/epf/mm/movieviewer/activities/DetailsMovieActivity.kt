@@ -4,6 +4,8 @@ import android.content.Intent
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 
 import android.widget.ImageView
 import android.widget.RatingBar
@@ -63,7 +65,7 @@ const val MOVIE_ID = "extra_movie_id"
 
 
       backdrop = findViewById(R.id.movie_backdrop)
-      poster = findViewById(R.id.movie_poster)
+      //poster = findViewById(R.id.movie_poster)
       title = findViewById(R.id.movie_title)
       rating = findViewById(R.id.movie_rating)
       releaseDate = findViewById(R.id.movie_release_date)
@@ -82,6 +84,25 @@ const val MOVIE_ID = "extra_movie_id"
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+      menuInflater.inflate(R.menu.menu_details, menu)
+      return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+      when (item.itemId) {
+        R.id.action_research -> {
+          val intent = Intent(this, ListMoviesResearchActivity::class.java)
+          startActivity(intent)
+        }
+        R.id.action_home ->{
+          val intent = Intent(this, HomeActivity::class.java)
+          startActivity(intent)
+        }
+      }
+      return super.onOptionsItemSelected(item)
+    }
 
     private fun getSimilarMovies() {
       MoviesRepository.getSimilarMovies(
@@ -126,12 +147,12 @@ const val MOVIE_ID = "extra_movie_id"
           .into(backdrop)
       }
 
-      extras.getString(MOVIE_POSTER)?.let { posterPath ->
+  /*    extras.getString(MOVIE_POSTER)?.let { posterPath ->
         Glide.with(this)
           .load("https://image.tmdb.org/t/p/w342$posterPath")
           .transform(CenterCrop())
           .into(poster)
-      }
+      }*/
 
       title.text = extras.getString(MOVIE_TITLE, "")
       rating.rating = extras.getFloat(MOVIE_RATING, 0f) / 2

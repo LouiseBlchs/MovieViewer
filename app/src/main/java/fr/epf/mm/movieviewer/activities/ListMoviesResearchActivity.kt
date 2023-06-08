@@ -3,6 +3,8 @@ package fr.epf.mm.movieviewer.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -44,9 +46,7 @@ class ListMoviesResearchActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener
         {
             override fun onQueryTextSubmit(msg: String) :Boolean {
-                Log.d("msg", msg)
                 getPopularMovies(msg)
-
                 movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
                 popularMovies.adapter = movieAdapter
 
@@ -54,7 +54,6 @@ class ListMoviesResearchActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(msg: String): Boolean {
-                Log.d("msg", msg)
                 getPopularMovies(msg)
                 movieAdapter = MovieAdapter(mutableListOf()){ movie -> showMovieDetails(movie)}
                 popularMovies.adapter = movieAdapter
@@ -90,29 +89,31 @@ class ListMoviesResearchActivity : AppCompatActivity() {
 
     private fun onPopularMoviesFetched(movies: List<Movie>) {
         movieAdapter.appendMovies(movies)
-        attachPopularMoviesOnScrollListener()
+
     }
 
 
-    private fun attachPopularMoviesOnScrollListener() {
-        popularMovies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val totalItemCount = popularMoviesLayoutMgr.itemCount
-                val visibleItemCount = popularMoviesLayoutMgr.childCount
-                val firstVisibleItem = popularMoviesLayoutMgr.findFirstVisibleItemPosition()
 
-                if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                    popularMovies.removeOnScrollListener(this)
-                    popularMoviesPage++
-                   // TODO : Solution pour scroll de getPopmovies?
-                }
-            }
-        })
-    }
     private fun onError() {
         Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_movies_research, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+
+            R.id.action_home ->{
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 
 

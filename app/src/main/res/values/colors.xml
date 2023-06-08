@@ -9,8 +9,8 @@
     <color name="white">#FFFFFFFF</color>
 
 
-        <color name="colorPrimary">#212121</color>
-        <color name="colorPrimaryDark">#000000</color>
-        <color name="colorAccent">#FF5252</color>
-
+<color name ="deep_pink">#8F7A0DA3</color>
+<color name ="deep_purple">#25184f</color>
+    <color name ="light_pink">#EF95FF</color>
+    <color name ="medium_pink">#C25BD5</color>
 </resources>
