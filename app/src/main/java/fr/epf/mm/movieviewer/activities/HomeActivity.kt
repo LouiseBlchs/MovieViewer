@@ -36,10 +36,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var upcomingMoviesLayoutManager: LinearLayoutManager
 
 
-
-    private val scanQrCodeLauncher = registerForActivityResult(ScanQRCode()) {result:QRResult -> openIDMovie(result.toString())
-
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -95,16 +91,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    private fun openIDMovie(id:String){
-        try{
-            val intent = Intent(this, DetailsMovieActivity::class.java)
-            intent.putExtra(MOVIE_ID,id)
-            startActivity(intent)
-        }catch (ignored: ActivityNotFoundException) {
-            // no Activity found to run the given Intent
-        }
 
-    }
     private fun onError() {
         Toast.makeText(this, getString(R.string.error_fetch_movies), Toast.LENGTH_SHORT).show()
     }
@@ -121,8 +108,9 @@ class HomeActivity : AppCompatActivity() {
                 val intent = Intent(this, ListMoviesResearchActivity::class.java)
                 startActivity(intent)
             }
-            R.id.action_qrscanner ->{
-                scanQrCodeLauncher.launch(null)
+            R.id.action_qr_scanner ->{
+                val intent = Intent(this, QRScannerActivity::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)

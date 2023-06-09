@@ -80,6 +80,8 @@ const val MOVIE_ID = "extra_movie_id"
 
       getSimilarMovies()
 
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

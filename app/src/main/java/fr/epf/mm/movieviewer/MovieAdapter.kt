@@ -13,7 +13,6 @@ import fr.epf.mm.movieviewer.model.Movie
 
 class MovieAdapter(
 
-
     private var movies: MutableList<Movie>,
     private val onMovieClick: (movie: Movie) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
@@ -38,6 +37,8 @@ class MovieAdapter(
             movies.size - 1
         )
     }
+
+
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

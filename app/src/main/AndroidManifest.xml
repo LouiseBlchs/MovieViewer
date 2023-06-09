@@ -30,6 +30,9 @@
             android:name=".activities.DetailsMovieActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.QRScannerActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ListMoviesResearchActivity"
             android:exported="true" />
     </application>
